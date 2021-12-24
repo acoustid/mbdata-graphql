@@ -11,6 +11,10 @@ Create .env file with the following contents:
     FLASK_DEBUG=true
     FLASK_APP=mbdata_graphql.app:create_app
 
+Install dependencies:
+
+    poetry install
+
 Run the GraphQL server:
 
     poetry run flask run
