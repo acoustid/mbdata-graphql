@@ -3,7 +3,7 @@ from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 
 from mbdata import models as mb
 
-import mbdata_graphql.types
+import mbdata_graphql.types  # noqa: F401
 
 
 class Artist(SQLAlchemyObjectType):
