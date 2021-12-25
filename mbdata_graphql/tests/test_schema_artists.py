@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from mbdata_graphql.schema import schema
 
 
-def test_artist(db_session: Session) -> None:
+def test_get_artist(db_session: Session) -> None:
     query = """
     {
       artist(gid: "8970d868-0723-483b-a75b-51088913d3d4") {
@@ -27,7 +27,7 @@ def test_artist(db_session: Session) -> None:
     }
 
 
-def test_artist_not_found(db_session: Session) -> None:
+def test_get_artist_not_found(db_session: Session) -> None:
     query = """
     {
       artist(gid: "ebf69959-e059-496e-bb67-518139df8c23") {
@@ -46,7 +46,7 @@ def test_artist_not_found(db_session: Session) -> None:
     }
 
 
-def test_artists(db_session: Session) -> None:
+def test_get_artists(db_session: Session) -> None:
     query = """
 {
   artists(first:3) {
