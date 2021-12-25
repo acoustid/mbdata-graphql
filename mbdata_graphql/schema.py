@@ -1,10 +1,15 @@
 import graphene
 from graphene import String, Field, List
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
+from sqlalchemy.orm import relationship
 
 from mbdata import models as mb
 
 import mbdata_graphql.types  # noqa: F401
+
+mb.Recording.tracks = relationship(
+    "Track", foreign_keys=[mb.Track.recording_id], viewonly=True
+)
 
 
 class Artist(SQLAlchemyObjectType):
@@ -57,17 +62,18 @@ class Recording(SQLAlchemyObjectType):
         interfaces = (graphene.relay.Node,)
         id = "gid"
 
-    tracks = SQLAlchemyConnectionField(Track)
-
 
 class Query(graphene.ObjectType):
     node = graphene.relay.Node.Field()
 
-    artists = SQLAlchemyConnectionField(Artist.connection)
+    artists = SQLAlchemyConnectionField(Artist)
     artist = Field(Artist, gid=String(required=True))
 
-    releases = SQLAlchemyConnectionField(Release.connection)
+    releases = SQLAlchemyConnectionField(Release)
     release = Field(Release, gid=String(required=True))
+
+    recordings = SQLAlchemyConnectionField(Recording)
+    recording = Field(Recording, gid=String(required=True))
 
     def resolve_artist(self, info, gid: str):
         query = Artist.get_query(info)
@@ -75,6 +81,10 @@ class Query(graphene.ObjectType):
 
     def resolve_release(self, info, gid: str):
         query = Release.get_query(info)
+        return query.filter_by(gid=gid).first()
+
+    def resolve_recording(self, info, gid: str):
+        query = Recording.get_query(info)
         return query.filter_by(gid=gid).first()
 
 
